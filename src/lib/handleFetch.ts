@@ -1,6 +1,6 @@
 import type { StringifiableRecord } from "query-string";
 
-import { baseUrl } from "../constants/api";
+import { getUrl } from "@/utils/url";
 
 interface FetchError extends Error {
   status?: number;
@@ -30,6 +30,7 @@ const fetchWithTimeout = (url: string, timeout: number, options?: RequestInit): 
 };
 
 export const handleFetch = async <T>(options?: FetchOptions): Promise<T> => {
+  const fullUrl = getUrl(options?.params);
   const timeout = options?.timeout ?? 30000;
   const retryCount = options?.retryCount ?? 2;
   const headers = options?.headers;
@@ -38,7 +39,7 @@ export const handleFetch = async <T>(options?: FetchOptions): Promise<T> => {
 
   for (let attempt = 0; attempt <= retryCount; attempt++) {
     try {
-      const response = await fetchWithTimeout(baseUrl, timeout, {
+      const response = await fetchWithTimeout(fullUrl, timeout, {
         method,
         headers,
         body,

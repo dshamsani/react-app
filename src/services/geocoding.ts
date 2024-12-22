@@ -1,3 +1,5 @@
+import type { Coordinates } from "@/types/coords";
+
 import { handleFetch } from "../lib/handleFetch";
 import { useQuery } from "@tanstack/react-query";
 
@@ -12,7 +14,7 @@ export const fetchCoordinatesByAddress = async (address: string) => {
     },
   };
 
-  return handleFetch(options);
+  return handleFetch<Coordinates>(options);
 };
 
 export const useFetchCoordinatesByAddress = (address: string) => {

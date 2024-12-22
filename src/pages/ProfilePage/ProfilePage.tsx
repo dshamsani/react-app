@@ -3,83 +3,68 @@ import type { FC } from "react";
 import { Header } from "@/components/Layout/Header";
 
 import { useUser } from "@/context/UserContext";
-import { useNavigate } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { useFetchCoordinatesByAddress } from "@/services/geocoding";
-import { useDebounce } from "@/hooks/useDebounce";
-
-import { toast } from "react-hot-toast";
+import { useProfile } from "@/hooks/user/useProfile";
 
 export const ProfilePage: FC = () => {
-  const { currentUser, updateUser } = useUser();
-  const navigate = useNavigate();
-
-  const [nameValue, setNameValue] = useState<string>(currentUser?.name || "");
-  const [addressValue, setAddressValue] = useState<string>(currentUser?.address || "");
-
-  const debouncedAddress = useDebounce(addressValue);
-
-  useEffect(() => {
-    if (!currentUser) {
-      navigate({ to: "/login" });
-    }
-  }, [currentUser, navigate]);
-
-  const { data: coordinates, isLoading, isError } = useFetchCoordinatesByAddress(debouncedAddress);
-
-  const handleSave = () => {
-    updateUser({
-      name: nameValue,
-      address: addressValue,
-    });
-
-    toast.success("Profile has been updated successfully!");
-  };
+  const { currentUser } = useUser();
+  const {
+    addressValue,
+    nameValue,
+    coordinates,
+    isError,
+    isLoading,
+    handleSave,
+    setAddressValue,
+    setNameValue,
+  } = useProfile();
 
   if (!currentUser) {
     return <div>No user data available</div>;
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className='min-h-screen bg-gray-50'>
       <Header />
-      <div className="max-w-xl mx-auto mt-10 bg-white p-6 shadow rounded">
-        <h2 className="text-2xl font-semibold mb-4">User Profile</h2>
+      <div className='mx-auto mt-10 max-w-xl rounded bg-white p-6 shadow'>
+        <h2 className='mb-4 text-2xl font-semibold'>User Profile</h2>
 
-        <div className="mb-4">
-          <label className="block mb-1">Name:</label>
+        <div className='mb-4'>
+          <label className='mb-1 block'>Name:</label>
           <input
-            type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded"
+            type='text'
+            className='w-full rounded border border-gray-300 px-3 py-2'
             value={nameValue}
-            onChange={(e) => setNameValue(e.target.value)}
+            onChange={e => setNameValue(e.target.value)}
           />
         </div>
 
-        <div className="mb-4">
-          <label className="block mb-1">Address:</label>
+        <div className='mb-4'>
+          <label className='mb-1 block'>Address:</label>
           <input
-            type="text"
-            className="w-full px-3 py-2 border border-gray-300 rounded"
+            type='text'
+            className='w-full rounded border border-gray-300 px-3 py-2'
             value={addressValue}
-            onChange={(e) => setAddressValue(e.target.value)}
+            onChange={e => setAddressValue(e.target.value)}
           />
         </div>
 
-        <button onClick={handleSave} className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">
+        <button
+          onClick={handleSave}
+          className='rounded bg-blue-500 px-4 py-2 text-white transition hover:bg-blue-600'
+        >
           Save
         </button>
 
-        <div className="mt-6">
-          <p className="font-semibold">Coordinates (lat, lon):</p>
-          {isLoading && <p className="text-gray-500">Loading...</p>}
-          {isError && <p className="text-red-500">Error loading coordinates</p>}
+        <div className='mt-6'>
+          <p className='font-semibold'>Coordinates (lat, lon):</p>
+          {isLoading && <p className='text-gray-500'>Loading...</p>}
+          {isError && <p className='text-red-500'>Error loading coordinates</p>}
           {coordinates ? (
-            <p className="mt-2">
+            <p className='mt-2'>
               {coordinates[0]?.lat}, {coordinates[0]?.lon}
             </p>
           ) : (
-            !isLoading && <p className="mt-2">Coordinates not found</p>
+            !isLoading && <p className='mt-2'>Coordinates not found</p>
           )}
         </div>
       </div>

@@ -1,61 +1,45 @@
-import type { FC, FormEvent } from "react";
+import type { FC } from "react";
 
-import { useState } from "react";
-import { useUser } from "@/context/UserContext";
-import { useNavigate } from "@tanstack/react-router";
+import { useLogin } from "@/hooks/user/useLogin";
 
 export const LoginPage: FC = () => {
-  const { login } = useUser();
-  const navigate = useNavigate();
-
-  const [loginValue, setLoginValue] = useState<string>("");
-  const [passwordValue, setPasswordValue] = useState<string>("");
-  const [error, setError] = useState<string>("");
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    setError("");
-
-    if (!loginValue || !passwordValue) {
-      setError("Fields cannot be empty");
-      return;
-    }
-
-    const success = login(loginValue, passwordValue);
-
-    if (success) {
-      navigate({ to: "/profile" });
-      return;
-    }
-
-    setError("Invalid login or password");
-  };
+  const {
+    error,
+    loginValue,
+    passwordValue,
+    handleSubmit,
+    setLoginValue,
+    setPasswordValue,
+  } = useLogin();
 
   return (
-    <div className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <div className="p-6 bg-white rounded shadow-md w-80">
-        <h1 className="text-xl font-bold mb-4 text-center">Login</h1>
-        <form onSubmit={handleSubmit} className="space-y-4">
+    <div className='flex h-screen flex-col items-center justify-center bg-gray-100'>
+      <div className='w-80 rounded bg-white p-6 shadow-md'>
+        <h1 className='mb-4 text-center text-xl font-bold'>Login</h1>
+        <form onSubmit={handleSubmit} className='space-y-4'>
           <div>
-            <label className="block mb-1">Login:</label>
+            <label className='mb-1 block'>Login:</label>
             <input
-              type="text"
-              className="w-full px-3 py-2 border border-gray-300 rounded"
+              type='text'
+              className='w-full rounded border border-gray-300 px-3 py-2'
               value={loginValue}
-              onChange={(e) => setLoginValue(e.target.value)}
+              onChange={e => setLoginValue(e.target.value)}
             />
           </div>
           <div>
-            <label className="block mb-1">Password:</label>
+            <label className='mb-1 block'>Password:</label>
             <input
-              type="password"
-              className="w-full px-3 py-2 border border-gray-300 rounded"
+              type='password'
+              className='w-full rounded border border-gray-300 px-3 py-2'
               value={passwordValue}
-              onChange={(e) => setPasswordValue(e.target.value)}
+              onChange={e => setPasswordValue(e.target.value)}
             />
           </div>
-          {error && <p className="text-red-500 text-sm">{error}</p>}
-          <button type="submit" className="w-full bg-blue-500 text-white py-2 rounded hover:bg-blue-600 transition">
+          {error && <p className='text-sm text-red-500'>{error}</p>}
+          <button
+            type='submit'
+            className='w-full rounded bg-blue-500 py-2 text-white transition hover:bg-blue-600'
+          >
             Sign In
           </button>
         </form>

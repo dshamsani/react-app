@@ -1,16 +1,11 @@
 import type { FC } from "react";
 
 import { useUser } from "@/context/UserContext";
-import { useNavigate } from "@tanstack/react-router";
+import { useHeader } from "@/hooks/layout/useHeader";
 
 export const Header: FC = () => {
-  const { currentUser, logout } = useUser();
-  const navigate = useNavigate();
-
-  const handleLogout = () => {
-    logout();
-    navigate({ to: "/login" });
-  };
+  const { currentUser } = useUser();
+  const { handleLogout } = useHeader();
 
   if (!currentUser) return null;
 

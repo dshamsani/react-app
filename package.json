@@ -14,7 +14,8 @@
     "@tanstack/react-router": "^1.92.1",
     "query-string": "^9.1.1",
     "react": "^18.3.1",
-    "react-dom": "^18.3.1"
+    "react-dom": "^18.3.1",
+    "react-hot-toast": "^2.4.1"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",

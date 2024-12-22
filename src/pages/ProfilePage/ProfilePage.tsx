@@ -1,10 +1,14 @@
 import type { FC } from "react";
 
+import { Header } from "@/components/Layout/Header";
+
 import { useUser } from "@/context/UserContext";
 import { useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { useFetchCoordinatesByAddress } from "@/services/geocoding";
-import { Header } from "@/components/Layout/Header";
+import { useDebounce } from "@/hooks/useDebounce";
+
+import { toast } from "react-hot-toast";
 
 export const ProfilePage: FC = () => {
   const { currentUser, updateUser } = useUser();
@@ -13,19 +17,23 @@ export const ProfilePage: FC = () => {
   const [nameValue, setNameValue] = useState<string>(currentUser?.name || "");
   const [addressValue, setAddressValue] = useState<string>(currentUser?.address || "");
 
+  const debouncedAddress = useDebounce(addressValue);
+
   useEffect(() => {
     if (!currentUser) {
       navigate({ to: "/login" });
     }
   }, [currentUser, navigate]);
 
-  const { data: coordinates, isLoading, isError } = useFetchCoordinatesByAddress(addressValue);
+  const { data: coordinates, isLoading, isError } = useFetchCoordinatesByAddress(debouncedAddress);
 
   const handleSave = () => {
     updateUser({
       name: nameValue,
       address: addressValue,
     });
+
+    toast.success("Profile has been updated successfully!");
   };
 
   if (!currentUser) {

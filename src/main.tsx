@@ -1,5 +1,6 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import { Toaster } from "react-hot-toast";
 import { createRouter } from "@tanstack/react-router";
 
 import { RouterProvider } from "@tanstack/react-router";
@@ -23,6 +24,7 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <QueryClientProvider client={queryClient}>
       <UserProvider>
+        <Toaster position="bottom-right" reverseOrder={false} />
         <RouterProvider router={router}></RouterProvider>
       </UserProvider>
     </QueryClientProvider>

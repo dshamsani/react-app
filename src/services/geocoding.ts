@@ -14,7 +14,7 @@ export const fetchCoordinatesByAddress = async (address: string) => {
     },
   };
 
-  return handleFetch<Coordinates>(options);
+  return handleFetch<Coordinates[]>(options);
 };
 
 export const useFetchCoordinatesByAddress = (address: string) => {

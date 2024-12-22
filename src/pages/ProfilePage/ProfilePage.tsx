@@ -68,7 +68,7 @@ export const ProfilePage: FC = () => {
           {isError && <p className="text-red-500">Error loading coordinates</p>}
           {coordinates ? (
             <p className="mt-2">
-              {coordinates.lat}, {coordinates.lon}
+              {coordinates[0].lat}, {coordinates[0].lon}
             </p>
           ) : (
             !isLoading && <p className="mt-2">Coordinates not found</p>

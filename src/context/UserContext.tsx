@@ -1,7 +1,7 @@
 import type { User } from "../types/user";
 import type { FC, PropsWithChildren } from "react";
 
-import { createContext, useCallback, useContext, useMemo, useState } from "react";
+import { createContext, useCallback, useContext, useLayoutEffect, useMemo, useState } from "react";
 
 import { notImplemented } from "../utils/helpers";
 import { predefinedUsers } from "../constants/users";
@@ -31,21 +31,36 @@ export const UserProvider: FC<PropsWithChildren> = ({ children }) => {
     }
 
     setCurrentUser(foundUser);
+    localStorage.setItem("currentUser", JSON.stringify(foundUser));
     return true;
   }, []);
 
   const logout = useCallback(() => {
     setCurrentUser(null);
+    localStorage.removeItem("currentUser");
   }, []);
 
-  const updateUser = useCallback((updatedUser: Partial<User>) => {
+  const updateUser = useCallback((data: Partial<User>) => {
     setCurrentUser((prev) => {
       if (!prev) {
         return null;
       }
-
-      return { ...prev, ...updatedUser };
+      const updatedUser = { ...prev, ...data };
+      localStorage.setItem("currentUser", JSON.stringify(updatedUser));
+      return updatedUser;
     });
+  }, []);
+
+  useLayoutEffect(() => {
+    const storedUser = localStorage.getItem("currentUser");
+    if (storedUser) {
+      try {
+        const parsedUser: User = JSON.parse(storedUser);
+        setCurrentUser(parsedUser);
+      } catch (error) {
+        console.error("Error parsing user from localStorage", error);
+      }
+    }
   }, []);
 
   const value: UserContextValue = useMemo(

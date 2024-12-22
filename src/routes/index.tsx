@@ -17,11 +17,7 @@ function Index() {
     }
 
     navigate({ to: "/login" });
-  }, []);
+  }, [currentUser]);
 
-  return (
-    <div className="p-2">
-      <h3>Welcome Home!</h3>
-    </div>
-  );
+  return <div className="p-2"></div>;
 }
